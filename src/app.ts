@@ -3,10 +3,12 @@ import userRouter from './routers/userRouter';
 import churchRouter from './routers/churchRouter';
 import cors from 'cors';
 
+const BASE_ORIGIN = process.env.ORIGIN;
+
 const app = express();
 
 app.use(express.json(), cors({
-  origin: 'http://localhost:3000',
+  origin: BASE_ORIGIN,
   credentials: true
 }));
 
