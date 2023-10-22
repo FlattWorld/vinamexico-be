@@ -7,9 +7,10 @@ const express_1 = __importDefault(require("express"));
 const userRouter_1 = __importDefault(require("./routers/userRouter"));
 const churchRouter_1 = __importDefault(require("./routers/churchRouter"));
 const cors_1 = __importDefault(require("cors"));
+const BASE_ORIGIN = process.env.ORIGIN;
 const app = (0, express_1.default)();
 app.use(express_1.default.json(), (0, cors_1.default)({
-    origin: 'http://localhost:3000',
+    origin: BASE_ORIGIN,
     credentials: true
 }));
 app.use('/api/v1/users', userRouter_1.default);
