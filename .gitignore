@@ -5,3 +5,5 @@ config.env
 dataSetter.js
 
 src/seeder.json
+
+dist/

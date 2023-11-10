@@ -14,10 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllUsers = exports.deleteUser = exports.editUser = exports.createUser = exports.getUsersByChurch = exports.getUserById = void 0;
 const userModel_1 = __importDefault(require("../models/userModel"));
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.params.userId;
     try {
-        const user = (yield userModel_1.default.find({ _id: userId }).exec()).at(0);
+        const user = (yield userModel_1.default.find({ _id: userId }).select('-password').exec()).at(0);
         res.status(200).json({
             status: 'success',
             data: { user }
@@ -34,7 +36,7 @@ exports.getUserById = getUserById;
 const getUsersByChurch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const churchId = req.params.churchId;
     try {
-        const users = yield userModel_1.default.find({ churchId }).exec();
+        const users = yield userModel_1.default.find({ churchId }).select('-password').exec();
         res.status(200).json({
             status: 'success',
             amount: users.length,
@@ -52,10 +54,24 @@ exports.getUsersByChurch = getUsersByChurch;
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const churchId = req.params.churchId;
-        const newUser = yield userModel_1.default.create(Object.assign(Object.assign({}, req.body), { churchId }));
+        const password = req.body.password;
+        let encryptedPassword = '';
+        if (churchId === '0') {
+            const salt = yield bcrypt.genSalt(saltRounds);
+            if (!salt)
+                throw new Error('Error al encriptar password');
+            const hash = yield bcrypt.hash(password, salt);
+            if (!hash)
+                throw new Error('Error al encriptar password');
+            encryptedPassword = hash;
+        }
+        console.log({ encryptedPassword });
+        const userInfo = Object.assign(Object.assign(Object.assign({}, req.body), { churchId }), (churchId === '0' && { role: 'admin', password: encryptedPassword }));
+        const newUser = yield userModel_1.default.create(userInfo);
+        delete userInfo.password;
         res.status(201).json({
             status: 'success',
-            data: { newUser }
+            data: { userInfo }
         });
     }
     catch (err) {
@@ -105,7 +121,7 @@ const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     if (queryObj.name)
         queryObj.name = { '$regex': queryObj.name, '$options': 'i' };
     try {
-        const query = userModel_1.default.find(queryObj);
+        const query = userModel_1.default.find(queryObj).select('-password').exec();
         const users = yield query;
         res.status(200).json({
             status: 'success',

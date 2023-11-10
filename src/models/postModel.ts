@@ -9,7 +9,7 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: [true, 'La publicación debe tener un título'],
   },
-  content: {
+  body: {
         type: String,
         required: [true, 'La publicación debe tener contenido'],
   }
