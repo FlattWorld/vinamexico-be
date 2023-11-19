@@ -9,14 +9,17 @@ const BASE_ORIGIN = process.env.ORIGIN;
 
 const app = express();
 
-app.use(express.json(), cors({
-  origin: BASE_ORIGIN,
-  credentials: true
-}));
+app.use(
+  express.json(),
+  cors({
+    origin: BASE_ORIGIN,
+    credentials: true,
+  }),
+);
 
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/churches', churchRouter);
 app.use('/api/v1/posts', postRouter);
-app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/auth', authRouter);
 
-export default app; 
+export default app;

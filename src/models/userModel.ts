@@ -2,18 +2,18 @@ import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
   churchId: {
-      type: String,
-      required: [true, 'El usuario debe pertenecer a una iglesia'],
+    type: String,
+    required: [true, 'El usuario debe pertenecer a una iglesia'],
   },
   name: {
-      type: String,
-      required: [true, 'El usuario debe tener un nombre'],
+    type: String,
+    required: [true, 'El usuario debe tener un nombre'],
   },
   email: String,
   phone: {
-      type: String,
-      required: [true, 'El usuario debe tener un número de teléfono'],
-      unique: [true, 'El número de teléfono ya existe'],
+    type: String,
+    required: [true, 'El usuario debe tener un número de teléfono'],
+    unique: [true, 'El número de teléfono ya existe'],
   },
   address: String,
   city: String,
@@ -26,10 +26,10 @@ const userSchema = new mongoose.Schema({
   conversionAnniversary: Date,
   password: String,
   role: {
-        type: String,
-        enum: ['admin', 'user'],
-        default: 'user',
-    },
+    type: String,
+    enum: ['admin', 'user'],
+    default: 'user',
+  },
 });
 
 const model = mongoose.model('User', userSchema);
